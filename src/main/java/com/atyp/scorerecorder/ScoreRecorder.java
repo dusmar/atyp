@@ -7,7 +7,7 @@ import com.atyp.binarytree.BTNode;
 
 /**
  * Main class
- *  
+ * 
  * @author dmarusca
  *
  */
@@ -25,28 +25,24 @@ public class ScoreRecorder {
 	 *         that they are given. For example, if you were given the stream of
 	 *         scores: 4, 2, 5, 5, 6, 1, 4. That would result in the tree with
 	 *         the following structure where each node is represented as
-	 *         <score>:<count>.
-	 *         			 4:2 
-	 *         			 / \ 
-	 *         			2:1 5:2 
-	 *         			/     \ 
-	 *         		1:1	      6:1 
-	 *         
-	 *         When serialized this tree is represented by the string: 4:2, 2:1, 5:2, 1:1, , , 6:1
-	 *         Each <score>:<count> entry is delimited with a comma. Empty
-	 *         children with a sibling do not output anything, but retain the
-	 *         comma delimiter.
+	 *         <score>:<count>. 4:2 
+	 *         					/ \ 
+	 *         			    	2:1 5:2
+	 *         				    / 	\ 
+	 *          			  1:1 	6:1
+	 * 
+	 *         When serialized this tree is represented by the string: 4:2, 2:1,
+	 *         5:2, 1:1, , , 6:1 Each <score>:<count> entry is delimited with a
+	 *         comma. Empty children with a sibling do not output anything, but
+	 *         retain the comma delimiter.
 	 * 
 	 */
 	public String scoresToTree(Integer[] scores) {
 		if (scores == null || scores.length == 0) {
 			return "";
 		}
-
 		BTNode<SRNodeData> root = initTree(scores);
-
-		return treeToStringByBF(root);
-
+		return treeToStringUsingBF(root);
 	}
 
 	/**
@@ -72,49 +68,51 @@ public class ScoreRecorder {
 		}
 	}
 
-	private String treeToStringByBF(BTNode<SRNodeData> root) {
+	private String treeToStringUsingBF(BTNode<SRNodeData> root) {
 		Queue<BTNode<SRNodeData>> queue = new LinkedList<BTNode<SRNodeData>>();
 		StringBuffer result = new StringBuffer();
 		queue.add(root);
 		while (!queue.isEmpty()) {
 			BTNode<SRNodeData> curNode = queue.poll();
-			if (curNode.getData() != null) {
-				result.append(curNode.getData().getScore()).append(":")
-						.append(curNode.getData().getCount());
-			} else {
-				//Empty children
-	
+			result.append(getStringNodeRepresentation(curNode, queue.isEmpty()));
+			if (!isEmptyNode(curNode)) { // not empty node
+				if (hasSomeChild(curNode)) {
+					if (curNode.getLeft() != null) {
+						queue.add(curNode.getLeft());
+					} else {
+						// Empty children with a sibling do not output anything,
+						// but retain the comma delimiter.
+						queue.add(createEmptyNode());
+					}
+
+					if (curNode.getRight() != null) {
+						queue.add(curNode.getRight());
+					} else {
+						// Empty children with a sibling do not output anything,
+						// but retain the comma delimiter.
+						queue.add(createEmptyNode());
+					}
+
+				}
 				if (!queue.isEmpty()) {
 					result.append(", ");
-				} else {
-					result.append(",");
 				}
-				continue;
-			}
-
-			if (curNode.getLeft() != null || curNode.getRight() != null) {
-
-				if (curNode.getLeft() != null) {
-					queue.add(curNode.getLeft());
-				} else {
-					//Empty children with a sibling do not output anything, but retain the comma delimiter.
-					queue.add(new BTNode<SRNodeData>(null));
-				}
-
-				if (curNode.getRight() != null) {
-					queue.add(curNode.getRight());
-				} else {
-					//Empty children with a sibling do not output anything, but retain the comma delimiter.
-					queue.add(new BTNode<SRNodeData>(null));
-				}
-
-			}
-			if (!queue.isEmpty()) {
-				result.append(", ");
 			}
 
 		}
 		return result.toString();
+	}
+
+	private String getStringNodeRepresentation(BTNode<SRNodeData> curNode, Boolean lastRecord) {
+		if (curNode.getData() != null) {
+			return String.format("%d:%d", curNode.getData().getScore(), curNode.getData().getCount());
+		} else {
+			if (lastRecord) {
+				return ",";
+			} else { // no more nodes
+				return ", "; // no additional space at the end
+			}
+		}
 	}
 
 	private BTNode<SRNodeData> initTree(Integer[] scores) {
@@ -126,7 +124,20 @@ public class ScoreRecorder {
 		}
 		return root;
 	}
-
+	
+	
+	private boolean hasSomeChild(BTNode<SRNodeData> curNode){
+		return curNode.getLeft() != null || curNode.getRight() != null;
+	}
+	
+	private BTNode<SRNodeData> createEmptyNode(){
+		return new BTNode<SRNodeData>(null);
+	}
+	
+	private boolean isEmptyNode(BTNode<SRNodeData> curNode){
+		return curNode.getData()==null;
+	}
+	
 	private BTNode<SRNodeData> createNewNode(Integer score) {
 		SRNodeData data = new SRNodeData(score, 1);
 		return new BTNode<SRNodeData>(data);

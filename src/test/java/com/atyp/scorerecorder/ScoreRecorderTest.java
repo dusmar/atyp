@@ -60,6 +60,21 @@ public class ScoreRecorderTest {
 		Assert.assertEquals("4:2, 2:1, 7:2, 1:1, , 6:1, ,", result);
 	}
 
+	/**
+	 *        			 4:2 
+	 *         			 /  
+	 *         			2:1  
+	 *         			/      
+	 *         		1:1	      
+
+	 */
+	@Test
+	public void scoresToTreeUncommonCaseTest() {
+		Integer[] input = { 4, 2, 1, 4, 2, 1};
+		ScoreRecorder rec = new ScoreRecorder();
+		String result = rec.scoresToTree(input);
+		Assert.assertEquals("4:2, 2:2, , 1:2, ,", result);
+	}
 	
 
 	@Test
@@ -84,21 +99,7 @@ public class ScoreRecorderTest {
 	
 	
 	
-	@Test
-	/**
-	 *        			 4:2 
-	 *         			 /  
-	 *         			2:1  
-	 *         			/      
-	 *         		1:1	      
-
-	 */
-	public void scoresToTreeUncommonCaseTest() {
-		Integer[] input = { 4, 2, 1, 4, 2, 1};
-		ScoreRecorder rec = new ScoreRecorder();
-		String result = rec.scoresToTree(input);
-		Assert.assertEquals("4:2, 2:2, , 1:2, ,", result);
-	}
+	
 
 	
 }

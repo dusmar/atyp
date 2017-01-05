@@ -1,5 +1,11 @@
 package com.atyp.binarytree;
 
+/**
+ * 
+ * @author dmarusca
+ *
+ * @param <E>
+ */
 public class BTNode<E> {
 
 	private E data;
