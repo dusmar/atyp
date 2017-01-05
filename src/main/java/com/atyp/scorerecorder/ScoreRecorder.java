@@ -25,12 +25,14 @@ public class ScoreRecorder {
 	 *         that they are given. For example, if you were given the stream of
 	 *         scores: 4, 2, 5, 5, 6, 1, 4. That would result in the tree with
 	 *         the following structure where each node is represented as
-	 *         <score>:<count>. 4:2 
+	 *         <score>:<count>. 
+	 *         
+	 *         			<pre>	4:2 
 	 *         					/ \ 
-	 *         			    	2:1 5:2
-	 *         				    / 	\ 
-	 *          			  1:1 	6:1
-	 * 
+	 *         			       2:1 5:2
+	 *         				   / 	\ 
+	 *          			 1:1 	6:1
+	 * 					</pre>
 	 *         When serialized this tree is represented by the string: 4:2, 2:1,
 	 *         5:2, 1:1, , , 6:1 Each <score>:<count> entry is delimited with a
 	 *         comma. Empty children with a sibling do not output anything, but
