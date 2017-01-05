@@ -27,4 +27,8 @@ public class SRNodeData {
 		this.count = count;
 	}
 
+	public void increaseCount() {
+		this.count++;
+	}
+
 }
